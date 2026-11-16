@@ -1,0 +1,26 @@
+name: Upstream Sync
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # 每周一 0 点自动运行
+  workflow_dispatch: # 允许你手动点击运行
+
+permissions:
+  contents: write
+
+jobs:
+  sync_latest_from_upstream:
+    runs-on: ubuntu-latest
+    name: Sync latest commits from upstream repo
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v3
+
+      - name: Sync upstream changes
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          target_sync_branch: main
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          upstream_sync_branch: main
+          upstream_sync_repo: freestylefly/awesome-gpt-image-2
+          test_mode: false
